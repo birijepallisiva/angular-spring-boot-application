@@ -1,0 +1,55 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.navbar-nav {
+  display: flex;
+  gap: 10px;
+}
+
+.navbar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.navbar-nav a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-nav a.active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.footer {
+  margin-top: auto;
+}
+
+/* Make sure the app takes full height */
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  background-color: #f5f5f5;
+}
+
+/* Responsive navigation */
+@media (max-width: 768px) {
+  .navbar-nav a {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+  
+  .navbar-nav a mat-icon {
+    display: none;
+  }
+}

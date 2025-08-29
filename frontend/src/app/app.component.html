@@ -1,0 +1,31 @@
+<!-- Navigation Bar -->
+<mat-toolbar color="primary">
+  <span class="navbar-brand">{{ title }}</span>
+  <span class="spacer"></span>
+  <nav class="navbar-nav">
+    <a mat-button routerLink="/home" routerLinkActive="active">
+      <mat-icon>home</mat-icon>
+      Home
+    </a>
+    <a mat-button routerLink="/teachers" routerLinkActive="active">
+      <mat-icon>people</mat-icon>
+      Teachers
+    </a>
+    <a mat-button routerLink="/add-teacher" routerLinkActive="active">
+      <mat-icon>person_add</mat-icon>
+      Add Teacher
+    </a>
+  </nav>
+</mat-toolbar>
+
+<!-- Main Content -->
+<div class="main-content">
+  <router-outlet></router-outlet>
+</div>
+
+<!-- Footer -->
+<footer class="footer bg-dark text-white text-center py-3 mt-5">
+  <div class="container">
+    <p>&copy; 2025 Teacher Management System. All rights reserved.</p>
+  </div>
+</footer>
