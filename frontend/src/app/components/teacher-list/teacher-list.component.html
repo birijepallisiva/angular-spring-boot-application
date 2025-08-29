@@ -1,0 +1,199 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h2>
+          <mat-icon>people</mat-icon>
+          Teacher Management
+        </h2>
+        <button mat-raised-button color="primary" routerLink="/add-teacher">
+          <mat-icon>person_add</mat-icon>
+          Add New Teacher
+        </button>
+      </div>
+
+      <!-- Search and Filter Section -->
+      <mat-card class="filter-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>search</mat-icon>
+            Search & Filter Teachers
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <!-- Search Bar -->
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Search by name</mat-label>
+                <input matInput 
+                       [(ngModel)]="searchTerm" 
+                       (input)="onSearch()"
+                       placeholder="Enter teacher name">
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <div class="search-actions">
+                <button mat-raised-button color="primary" (click)="applyFilters()">
+                  <mat-icon>filter_list</mat-icon>
+                  Apply Filters
+                </button>
+                <button mat-button (click)="clearFilters()">
+                  <mat-icon>clear</mat-icon>
+                  Clear
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter Options -->
+          <div class="row">
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Min Age</mat-label>
+                <input matInput 
+                       type="number" 
+                       [(ngModel)]="minAge"
+                       placeholder="e.g., 25">
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Max Age</mat-label>
+                <input matInput 
+                       type="number" 
+                       [(ngModel)]="maxAge"
+                       placeholder="e.g., 65">
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Min Classes</mat-label>
+                <input matInput 
+                       type="number" 
+                       [(ngModel)]="minClasses"
+                       placeholder="e.g., 1">
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Max Classes</mat-label>
+                <input matInput 
+                       type="number" 
+                       [(ngModel)]="maxClasses"
+                       placeholder="e.g., 10">
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Export Section -->
+      <div class="export-section">
+        <h5>
+          <mat-icon>file_download</mat-icon>
+          Export Data
+        </h5>
+        <div class="export-buttons">
+          <button mat-raised-button color="accent" (click)="exportToPDF()">
+            <mat-icon>picture_as_pdf</mat-icon>
+            Export PDF
+          </button>
+          <button mat-raised-button color="accent" (click)="exportToExcel()">
+            <mat-icon>table_chart</mat-icon>
+            Export Excel
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading Spinner -->
+      <div class="loading-container" *ngIf="loading">
+        <mat-spinner></mat-spinner>
+        <p>Loading teachers...</p>
+      </div>
+
+      <!-- Teachers Table -->
+      <mat-card *ngIf="!loading" class="table-card">
+        <mat-card-header>
+          <mat-card-title>
+            Teachers List ({{ filteredTeachers.length }} records)
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="table-responsive" *ngIf="filteredTeachers.length > 0">
+            <table mat-table [dataSource]="filteredTeachers" class="w-100">
+              <!-- ID Column -->
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>ID</th>
+                <td mat-cell *matCellDef="let teacher">{{ teacher.id }}</td>
+              </ng-container>
+
+              <!-- Full Name Column -->
+              <ng-container matColumnDef="fullName">
+                <th mat-header-cell *matHeaderCellDef>Full Name</th>
+                <td mat-cell *matCellDef="let teacher">{{ teacher.fullName }}</td>
+              </ng-container>
+
+              <!-- Age Column -->
+              <ng-container matColumnDef="age">
+                <th mat-header-cell *matHeaderCellDef>Age</th>
+                <td mat-cell *matCellDef="let teacher">{{ teacher.age }}</td>
+              </ng-container>
+
+              <!-- Date of Birth Column -->
+              <ng-container matColumnDef="dateOfBirth">
+                <th mat-header-cell *matHeaderCellDef>Date of Birth</th>
+                <td mat-cell *matCellDef="let teacher">{{ teacher.dateOfBirth | date:'mediumDate' }}</td>
+              </ng-container>
+
+              <!-- Number of Classes Column -->
+              <ng-container matColumnDef="numberOfClasses">
+                <th mat-header-cell *matHeaderCellDef>Classes</th>
+                <td mat-cell *matCellDef="let teacher">
+                  <span class="badge bg-primary">{{ teacher.numberOfClasses }}</span>
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let teacher">
+                  <div class="action-buttons">
+                    <button mat-icon-button 
+                            color="primary"
+                            [routerLink]="['/edit-teacher', teacher.id]"
+                            matTooltip="Edit Teacher">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button 
+                            color="warn"
+                            (click)="deleteTeacher(teacher.id!)"
+                            matTooltip="Delete Teacher">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+
+          <!-- No Data Message -->
+          <div class="no-data" *ngIf="filteredTeachers.length === 0">
+            <mat-icon>info</mat-icon>
+            <h4>No teachers found</h4>
+            <p>No teachers match your current search criteria.</p>
+            <button mat-raised-button color="primary" routerLink="/add-teacher">
+              <mat-icon>person_add</mat-icon>
+              Add First Teacher
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

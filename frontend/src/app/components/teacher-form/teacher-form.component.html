@@ -1,0 +1,142 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <!-- Form Header -->
+      <div class="form-header">
+        <h2>
+          <mat-icon>{{ isEditMode ? 'edit' : 'person_add' }}</mat-icon>
+          {{ isEditMode ? 'Edit Teacher' : 'Add New Teacher' }}
+        </h2>
+        <button mat-button (click)="onCancel()">
+          <mat-icon>arrow_back</mat-icon>
+          Back to List
+        </button>
+      </div>
+
+      <!-- Teacher Form -->
+      <mat-card class="form-card">
+        <mat-card-header>
+          <mat-card-title>
+            {{ isEditMode ? 'Update Teacher Information' : 'Teacher Information' }}
+          </mat-card-title>
+          <mat-card-subtitle>
+            {{ isEditMode ? 'Modify the teacher details below' : 'Enter the teacher details below' }}
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <form [formGroup]="teacherForm" (ngSubmit)="onSubmit()" novalidate>
+            <!-- Full Name Field -->
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Full Name</mat-label>
+                <input matInput 
+                       formControlName="fullName"
+                       placeholder="Enter full name"
+                       [class.is-invalid]="hasError('fullName')">
+                <mat-icon matSuffix>person</mat-icon>
+                <mat-error *ngIf="hasError('fullName')">
+                  {{ getErrorMessage('fullName') }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Date of Birth Field -->
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Date of Birth</mat-label>
+                <input matInput 
+                       [matDatepicker]="picker"
+                       formControlName="dateOfBirth"
+                       [max]="maxDate"
+                       placeholder="Select date of birth"
+                       [class.is-invalid]="hasError('dateOfBirth')">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="hasError('dateOfBirth')">
+                  {{ getErrorMessage('dateOfBirth') }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Number of Classes Field -->
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Number of Classes</mat-label>
+                <input matInput 
+                       type="number"
+                       formControlName="numberOfClasses"
+                       placeholder="Enter number of classes (1-50)"
+                       min="1"
+                       max="50"
+                       [class.is-invalid]="hasError('numberOfClasses')">
+                <mat-icon matSuffix>school</mat-icon>
+                <mat-error *ngIf="hasError('numberOfClasses')">
+                  {{ getErrorMessage('numberOfClasses') }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+              <button mat-raised-button 
+                      color="primary" 
+                      type="submit"
+                      [disabled]="loading || teacherForm.invalid"
+                      class="submit-btn">
+                <mat-icon>{{ isEditMode ? 'update' : 'save' }}</mat-icon>
+                {{ loading ? 'Saving...' : (isEditMode ? 'Update Teacher' : 'Add Teacher') }}
+              </button>
+
+              <button mat-button 
+                      type="button"
+                      (click)="onReset()"
+                      [disabled]="loading">
+                <mat-icon>refresh</mat-icon>
+                Reset
+              </button>
+
+              <button mat-button 
+                      type="button"
+                      (click)="onCancel()"
+                      [disabled]="loading">
+                <mat-icon>cancel</mat-icon>
+                Cancel
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Form Guidelines -->
+      <mat-card class="guidelines-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>info</mat-icon>
+            Guidelines
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ul class="guidelines-list">
+            <li>
+              <mat-icon>check_circle</mat-icon>
+              <strong>Full Name:</strong> Must be 2-100 characters, letters and spaces only
+            </li>
+            <li>
+              <mat-icon>check_circle</mat-icon>
+              <strong>Date of Birth:</strong> Must be a past date (cannot be today or future)
+            </li>
+            <li>
+              <mat-icon>check_circle</mat-icon>
+              <strong>Number of Classes:</strong> Must be between 1 and 50 classes
+            </li>
+            <li>
+              <mat-icon>check_circle</mat-icon>
+              All fields are required and must be valid before submission
+            </li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,144 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <!-- Welcome Section -->
+      <div class="welcome-section fade-in">
+        <div class="text-center">
+          <h1 class="display-4 mb-4">Welcome to Teacher Management System</h1>
+          <p class="lead">Esaeeeficiently manage teacher records with our comprehensive system</p>
+        </div>
+      </div>
+
+      <!-- Statistics Section -->
+      <div class="row mt-5" *ngIf="!loading && statistics">
+        <div class="col-md-6">
+          <div class="stat-card fade-in">
+            <h3>{{ statistics.totalTeachers }}</h3>
+            <p>Total Teachers</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="stat-card fade-in">
+            <h3>{{ statistics.averageClasses | number:'1.1-2' }}</h3>
+            <p>Average Classes per Teacher</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading Spinner -->
+      <div class="loading-container" *ngIf="loading">
+        <mat-spinner></mat-spinner>
+      </div>
+
+      <!-- Navigation Cards -->
+      <div class="row mt-5">
+        <div class="col-md-4 mb-4">
+          <mat-card class="feature-card fade-in">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>people</mat-icon>
+              <mat-card-title>View All Teachers</mat-card-title>
+              <mat-card-subtitle>Browse all teacher records</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p>View, search, and filter through all teacher records in the system. Access detailed information about each teacher.</p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-raised-button color="primary" routerLink="/teachers">
+                <mat-icon>visibility</mat-icon>
+                View Teachers
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+
+        <div class="col-md-4 mb-4">
+          <mat-card class="feature-card fade-in">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>person_add</mat-icon>
+              <mat-card-title>Add New Teacher</mat-card-title>
+              <mat-card-subtitle>Register a new teacher</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Add new teachers to the system with their personal information and class assignments.</p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-raised-button color="primary" routerLink="/add-teacher">
+                <mat-icon>add</mat-icon>
+                Add Teacher
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+
+        <div class="col-md-4 mb-4">
+          <mat-card class="feature-card fade-in">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>filter_list</mat-icon>
+              <mat-card-title>Filter & Search</mat-card-title>
+              <mat-card-subtitle>Advanced filtering options</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Use advanced filters to find teachers by age, number of classes, or search by name.</p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-raised-button color="primary" routerLink="/teachers">
+                <mat-icon>search</mat-icon>
+                Search & Filter
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Export Section -->
+      <div class="export-section mt-4">
+        <h3 class="mb-3">
+          <mat-icon>file_download</mat-icon>
+          Export Data
+        </h3>
+        <p>Download teacher records in PDF or Excel format</p>
+        <div class="export-buttons">
+          <button mat-raised-button color="accent" (click)="exportToPDF()">
+            <mat-icon>picture_as_pdf</mat-icon>
+            Download PDF
+          </button>
+          <button mat-raised-button color="accent" (click)="exportToExcel()">
+            <mat-icon>table_chart</mat-icon>
+            Download Excel
+          </button>
+        </div>
+      </div>
+
+      <!-- Features Overview -->
+      <div class="features-overview mt-5">
+        <div class="row">
+          <div class="col-12">
+            <h2 class="text-center mb-4">System Features</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 text-center mb-3">
+            <mat-icon class="feature-icon">create</mat-icon>
+            <h5>CRUD Operations</h5>
+            <p>Create, Read, Update, and Delete teacher records</p>
+          </div>
+          <div class="col-md-3 text-center mb-3">
+            <mat-icon class="feature-icon">search</mat-icon>
+            <h5>Advanced Search</h5>
+            <p>Search teachers by name with real-time results</p>
+          </div>
+          <div class="col-md-3 text-center mb-3">
+            <mat-icon class="feature-icon">filter_alt</mat-icon>
+            <h5>Smart Filtering</h5>
+            <p>Filter by age range and number of classes</p>
+          </div>
+          <div class="col-md-3 text-center mb-3">
+            <mat-icon class="feature-icon">analytics</mat-icon>
+            <h5>Statistics</h5>
+            <p>View system statistics and analytics</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
