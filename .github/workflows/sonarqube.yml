@@ -44,6 +44,12 @@ jobs:
           cd frontend
           npm run build -- --configuration production
 
+      - name: Set up Java 17 for SonarQube
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Analyze with SonarQube
         uses: SonarSource/sonarqube-scan-action@v1.1.0
         env:
