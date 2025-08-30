@@ -55,4 +55,4 @@ jobs:
             -Dsonar.sources=src
             -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.json,coverage/**
             -Dsonar.projectBaseDir=frontend
-            -Dsonar.qualitygate.wait=false  # Don't fail build on quality gate
+            -Dsonar.qualitygate.wait=false 
