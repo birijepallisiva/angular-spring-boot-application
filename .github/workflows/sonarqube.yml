@@ -38,7 +38,21 @@ jobs:
       - name: Run tests with coverage
         run: |
           cd frontend
-          npm test -- --watch=false --code-coverage
+          echo "Detecting test runner from package.json..."
+          if grep -q '"jest"' package.json || grep -q '\"@jest\"' package.json; then
+            echo "Detected Jest -> running: npm test -- --coverage --watchAll=false --runInBand"
+            npm test -- --coverage --watchAll=false --runInBand
+          elif grep -q '"@angular/cli"' package.json || grep -q '"karma"' package.json || grep -q '"@angular-devkit"' package.json; then
+            echo "Detected Angular/Karma -> trying ng test (headless, no watch)"
+            if npx -v >/dev/null 2>&1 && npx ng --version >/dev/null 2>&1; then
+              npx ng test --watch=false --code-coverage --browsers=ChromeHeadless || npm test -- --watch=false --code-coverage
+            else
+              npm test -- --watch=false --code-coverage
+            fi
+          else
+            echo "Unknown test runner. Running npm test without extra flags."
+            npm test
+          fi
 
       - name: Build application
         run: |
