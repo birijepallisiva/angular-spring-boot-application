@@ -2,17 +2,17 @@ name: SonarQube analysis for Angular
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
-  pull-requests: read
   contents: read
+  pull-requests: read
 
 jobs:
-  Analysis:
+  analysis:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,21 +44,43 @@ jobs:
           cd frontend
           npm run build -- --configuration production
 
+      # ensure Java 17 is installed on the runner (needed by SonarScanner)
       - name: Set up Java 17 for SonarQube
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Analyze with SonarQube
-        uses: SonarSource/sonarqube-scan-action@v1.1.0
+      - name: Verify Java on runner
+        run: |
+          java -version
+          echo "JAVA_HOME=$JAVA_HOME"
+
+      # Download and unpack SonarScanner CLI and add to PATH
+      - name: Download SonarScanner CLI
+        run: |
+          # Pick a Sonar Scanner CLI version that is compatible with your SonarQube server.
+          # If you get a 404 adjust SCANNER_VERSION to a supported one.
+          SCANNER_VERSION="4.8.0.2856"
+          echo "Using sonar-scanner-cli version: $SCANNER_VERSION"
+          wget -qO /tmp/sonar-scanner.zip "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER_VERSION}-linux.zip"
+          unzip -q /tmp/sonar-scanner.zip -d /tmp
+          mv /tmp/sonar-scanner-${SCANNER_VERSION}-linux /tmp/sonar-scanner
+          echo "SONAR_SCANNER_HOME=/tmp/sonar-scanner" >> $GITHUB_ENV
+          echo "/tmp/sonar-scanner/bin" >> $GITHUB_PATH
+
+      - name: Run SonarScanner CLI
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with:
-          args: >
-            -Dsonar.projectKey=birijepallisiva_angular-spring-boot-application
-            -Dsonar.sources=src
-            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.json,coverage/**
-            -Dsonar.projectBaseDir=frontend
+        run: |
+          echo "java -version (inside runner):"
+          java -version
+          cd frontend
+          /tmp/sonar-scanner/bin/sonar-scanner \
+            -Dsonar.projectKey=birijepallisiva_angular-spring-boot-application \
+            -Dsonar.sources=src \
+            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.json,coverage/** \
+            -Dsonar.projectBaseDir=frontend \
+            -Dsonar.host.url="$SONAR_HOST_URL" \
+            -Dsonar.login="$SONAR_TOKEN"
