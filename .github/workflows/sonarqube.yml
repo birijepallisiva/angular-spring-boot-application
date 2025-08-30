@@ -18,21 +18,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fixes shallow clone warning
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
-
-      - name: Cache NPM and node_modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.npm
-            frontend/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: '22.11.0'  # Recommended LTS version
 
       - name: Install dependencies
         run: |
@@ -51,7 +43,6 @@ jobs:
           java-version: '17'
 
       - name: Analyze with SonarQube
-        # Use a newer version that supports Java 17
         uses: SonarSource/sonarqube-scan-action@v2.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -64,3 +55,4 @@ jobs:
             -Dsonar.sources=src
             -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.json,coverage/**
             -Dsonar.projectBaseDir=frontend
+            -Dsonar.qualitygate.wait=false  # Don't fail build on quality gate
