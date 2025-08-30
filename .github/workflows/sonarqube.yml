@@ -59,7 +59,7 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args: >
-            -Dsonar.organization=birijepallisiv
+            -Dsonar.organization=birijepallisiva
             -Dsonar.projectKey=birijepallisiva_angular-spring-boot-application
             -Dsonar.sources=src
             -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.json,coverage/**
