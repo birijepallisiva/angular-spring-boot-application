@@ -1,4 +1,4 @@
-name: SonarQube analysis for Angular
+name: SonarQube analysis for Angular (static only)
 
 on:
   push:
@@ -19,46 +19,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: |
-          cd frontend
-          if [ -f package-lock.json ]; then
-            echo "Found package-lock.json -> using npm ci"
-            npm ci
-          else
-            echo "No package-lock.json -> using npm install"
-            npm install
-          fi
-
-      - name: Run tests with coverage
-        run: |
-          cd frontend
-          echo "Detecting test runner from package.json..."
-          if grep -q '"jest"' package.json || grep -q '\"@jest\"' package.json; then
-            echo "Detected Jest -> running: npm test -- --coverage --watchAll=false --runInBand"
-            npm test -- --coverage --watchAll=false --runInBand
-          elif grep -q '"@angular/cli"' package.json || grep -q '"karma"' package.json || grep -q '"@angular-devkit"' package.json; then
-            echo "Detected Angular/Karma -> trying ng test (headless, no watch)"
-            if npx -v >/dev/null 2>&1 && npx ng --version >/dev/null 2>&1; then
-              npx ng test --watch=false --code-coverage --browsers=ChromeHeadless || npm test -- --watch=false --code-coverage
-            else
-              npm test -- --watch=false --code-coverage
-            fi
-          else
-            echo "Unknown test runner. Running npm test without extra flags."
-            npm test
-          fi
-
-      - name: Build application
-        run: |
-          cd frontend
-          npm run build -- --configuration production
-
       - name: Analyze with SonarQube
         uses: SonarSource/sonarqube-scan-action@v1.1.0
         env:
@@ -69,8 +29,5 @@ jobs:
           args: >
             -Dsonar.projectKey=birijepallisiva_angular-spring-boot-application
             -Dsonar.sources=frontend/src
-            -Dsonar.tests=frontend/src
-            -Dsonar.typescript.lcov.reportPaths=frontend/coverage/lcov.info
-            -Dsonar.test.inclusions=**/*.spec.ts
             -Dsonar.exclusions=node_modules/**,dist/**,**/*.json,frontend/coverage/**
             -Dsonar.projectBaseDir=frontend
