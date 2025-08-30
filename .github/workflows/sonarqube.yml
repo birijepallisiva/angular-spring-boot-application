@@ -51,13 +51,13 @@ jobs:
           java-version: '17'
 
       - name: Analyze with SonarQube
-        uses: SonarSource/sonarqube-scan-action@v1.1.0
+        # Use a newer version that supports Java 17
+        uses: SonarSource/sonarqube-scan-action@v2.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
-          java-version: 17 
           args: >
             -Dsonar.projectKey=birijepallisiva_angular-spring-boot-application
             -Dsonar.sources=src
