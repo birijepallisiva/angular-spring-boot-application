@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: teacher-management-backend
+  
+  datasource:
+    url: 'postgresql://neondb_owner:{{secrets.PG_PASS}}@ep-dry-wind-a1ij7sz9-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
+    username: neondb_owner
+    password: {{secrets.PG_PASS}}
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update   
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+
+
+server:
+  port: 8000
+  address: 0.0.0.0
+
+logging:
+  level:
+    com.teachermanagement: DEBUG
+    org.springframework.web: DEBUG
